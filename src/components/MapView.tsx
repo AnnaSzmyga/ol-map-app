@@ -6,7 +6,12 @@ import TileLayer from "ol/layer/Tile";
 import OSM from "ol/source/OSM";
 import { getCenter } from "ol/extent";
 import { createMaskLayer } from "../utils/createMaskLayer";
-import { POLAND_EXTENT, POLAND_EXTENT_WITH_MARGIN } from "../constants";
+import {
+  DATA_COLORS,
+  DATA_LABELS,
+  POLAND_EXTENT,
+  POLAND_EXTENT_WITH_MARGIN,
+} from "../constants";
 import type Layer from "ol/layer/Layer";
 import { linesLayer, wojLayer } from "../utils/layer";
 
@@ -57,16 +62,31 @@ export default function MapView() {
       id="map"
       className="map-container"
       style={{
-        height: "800px",
+        height: "100vh",
         width: "100vw",
       }}
     >
-      <button
-        className="toggle-layers-button"
-        onClick={() => setAreLayersVisible((prev) => !prev)}
-      >
-        {areLayersVisible ? "Ukryj warstwy" : "Pokaż warstwy"}
-      </button>
+      <div className="sticky-box">
+        {areLayersVisible && (
+          <ul className="legend">
+            {DATA_LABELS.map((label, idx) => (
+              <li className="legend-item" key={label + idx}>
+                <div
+                  className="data-indicator"
+                  style={{ backgroundColor: DATA_COLORS[idx] }}
+                />
+                {label}
+              </li>
+            ))}
+          </ul>
+        )}
+        <button
+          className="toggle-layers-button"
+          onClick={() => setAreLayersVisible((prev) => !prev)}
+        >
+          {areLayersVisible ? "Ukryj warstwy" : "Pokaż warstwy"}
+        </button>
+      </div>
     </div>
   );
 }

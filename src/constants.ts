@@ -10,3 +10,6 @@ export const POLAND_EXTENT: Extent = [
 export const POLAND_EXTENT_WITH_MARGIN: Extent = [
   1450000, 6150000, 2800000, 7450000,
 ];
+
+export const DATA_LABELS = ["dane1", "dane2", "dane3", "dane4"];
+export const DATA_COLORS = ["#ff5252", "#ffa726", "#29b6f6", "#66bb6a"];
