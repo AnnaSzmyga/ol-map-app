@@ -1,7 +1,7 @@
-import "./App.css";
+import MapView from "./components/MapView";
 
 function App() {
-  return <div>map app</div>;
+  return <MapView />;
 }
 
 export default App;
