@@ -3,13 +3,12 @@ import VectorSource from "ol/source/Vector";
 import Feature from "ol/Feature";
 import Polygon from "ol/geom/Polygon";
 import { Fill, Style } from "ol/style";
-import { POLAND_EXTENT, POLAND_EXTENT_WITH_MARGIN } from "../constants";
+import { POLAND_EXTENT } from "../constants";
 
 export function createMaskLayer() {
-  const [minX, minY, maxX, maxY] = POLAND_EXTENT_WITH_MARGIN;
-  const [holeMinX, holeMinY, holeMaxX, holeMaxY] = POLAND_EXTENT;
+  const [minX, minY, maxX, maxY] = POLAND_EXTENT;
 
-  const offset = 1000000;
+  const offset = 2000000;
 
   const outer = [
     [minX - offset, minY - offset],
@@ -20,11 +19,11 @@ export function createMaskLayer() {
   ];
 
   const hole = [
-    [holeMinX, holeMinY],
-    [holeMaxX, holeMinY],
-    [holeMaxX, holeMaxY],
-    [holeMinX, holeMaxY],
-    [holeMinX, holeMinY],
+    [minX, minY],
+    [maxX, minY],
+    [maxX, maxY],
+    [minX, maxY],
+    [minX, minY],
   ];
 
   const poly = new Polygon([outer, hole]);
