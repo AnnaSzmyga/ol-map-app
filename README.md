@@ -1,73 +1,103 @@
-# React + TypeScript + Vite
+# Aplikacja mapowa – OpenLayers + React + TypeScript + ol-ext + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplikacja prezentuje interaktywną mapę Polski z wykorzystaniem OpenLayers, danych GeoJSON oraz wykresów kołowych generowanych przez ol-ext. Projekt został zbudowany w React + TypeScript i zawiera prosty interfejs do zarządzania widocznością warstw.
 
-Currently, two official plugins are available:
+## Funkcjonalności
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Mapa OSM (OpenStreetMap)
 
-## React Compiler
+- Mapa ładuje się na pełnym ekranie.
+- Widok został ograniczony do granic Polski.
+- Obszar poza granicami Polski jest zakryty maską (półprzezroczysty poligon).
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Warstwy GeoJSON
 
-## Expanding the ESLint configuration
+Aplikacja wczytuje dwie warstwy:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+1. Województwa (wojewodztwa.geojson)
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Dane w formacie GeoJSON z projekcją EPSG:4258, konwertowane do EPSG:3857.
+- Każde województwo ma właściwości: dane1, dane2, dane3, dane4.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+2. Linie (linie.geojson)
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- Warstwa zawiera dane liniowe.
+- Dane w formacie GeoJSON z projekcją EPSG:2180, konwertowane do EPSG:3857.
+
+### Wykresy kołowe na warstwie województw
+
+- Wykorzystano ol-ext/style/Chart.
+- Dla każdego województwa renderowany jest wykres kołowy oparty na wartościach dane1–dane4.
+- Wykres umieszczony jest w środku geometrii województwa.
+- Aplikacja zawiera legendę opisującą kolory wykresu i odpowiadające im dane.
+
+### Włączanie i wyłączanie warstw
+
+- Aplikacja posiada przycisk „Pokaż warstwy / Ukryj warstwy”.
+- Użytkownik może włączać i wyłączać dwie warstwy: warstwę województw i warstwę linii.
+- Warstwa OSM oraz maska są zawsze aktywne.
+
+## Technologie
+
+- React + TypeScript
+- Vite
+- OpenLayers
+- ol-ext
+- GeoJSON
+
+## Struktura projektu
+
+```css
+public/
+│── data/
+│ ├── wojewodztwa.geojson
+│ └── linie.geojson
+src/
+│── components/
+│ └── MapView.tsx
+│── utils/
+│ ├── layers.ts
+│ └── createMaskLayer.ts
+│── App.tsx
+│── main.tsx
+│── constants.ts
+│── index.css
+└── index.html
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Uruchomienie projektu
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+1. Instalacja zależności
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```nginx
+npm install
 ```
+
+2. Uruchomienie projektu w trybie developerskim
+
+```nginx
+npm run dev
+```
+
+3. Aplikacja będzie dostępna pod http://localhost:5173/
+
+## Przykładowe zastosowania
+
+Projekt demonstruje:
+
+- pracę z danymi przestrzennymi,
+- konwersję układów współrzędnych,
+- tworzenie niestandardowych styli w OpenLayers,
+- obsługę wielu warstw mapowych,
+- integrację OpenLayers z React i TypeScript.
+
+## Możliwe rozszerzenia
+
+- Popup z informacjami o danych po kliknięciu na pojedyncze województwo lub wykres
+- Optymalizacja płynności działania poligonu
+- Animacje przy włączaniu/wyłączaniu warstw
+
+## Licencja
+
+Projekt stworzony jako rozwiązanie zadania rekrutacyjnego.
+Dane GeoJSON dostarczone przez organizatora zadania.
